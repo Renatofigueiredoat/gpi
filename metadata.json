@@ -1,0 +1,6 @@
+{
+  "name": "Guia de Prescrição Inteligente (GPI)",
+  "description": "Um assistente de prescrição inteligente para estudantes de medicina e médicos, fornecendo modelos de prescrição baseados em evidências, informações detalhadas sobre medicamentos e ferramentas de apoio à decisão clínica alimentadas por IA.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

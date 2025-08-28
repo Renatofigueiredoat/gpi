@@ -1,0 +1,48 @@
+
+{
+  "name": "guia-de-prescricao-inteligente",
+  "version": "1.0.0",
+  "description": "Um assistente de prescrição inteligente para estudantes de medicina e médicos.",
+  "main": "electron.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder"
+  },
+  "keywords": [
+    "gpi",
+    "medicina",
+    "prescricao",
+    "electron"
+  ],
+  "author": "Seu Nome",
+  "license": "UNLICENSED",
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^31.1.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.gpi.app",
+    "productName": "Guia de Prescrição Inteligente",
+    "files": [
+      "**/*",
+      "!node_modules/**/*",
+      "!venv/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png"
+    }
+  }
+}

@@ -1,0 +1,78 @@
+/* For a better scrollbar on Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Global transitions for a smoother UI */
+button, a, input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
+button:hover, a:hover {
+  transform: translateY(-1px);
+}
+button:active, a:active {
+    transform: translateY(0px);
+}
+
+/* Style for the final prescription block to look like a document */
+#final-prescription-view {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #ffffff; /* White paper */
+}
+.dark #final-prescription-view {
+    background-color: #f1f5f9; /* Off-white paper for dark mode */
+}
+#final-prescription-view > div {
+    color: #000000; /* Black ink */
+}
+
+/* Print-specific styles */
+@media print {
+  /* Remove screen-only layout constraints from the body and main containers */
+  body, #root, .container {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure the background is white for printing */
+  body {
+    background: #ffffff !important;
+  }
+
+  /* Ensure the second via starts on a new page */
+  .page-break-after-always {
+    break-after: page;
+  }
+
+  /* Define page size and margins */
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+}
