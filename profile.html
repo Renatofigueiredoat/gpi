@@ -1,0 +1,50 @@
+
+{% extends "layout.html" %}
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-white text-center mb-8">
+    Meu Perfil Profissional
+</h1>
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 sm:p-8 max-w-2xl mx-auto">
+    <form action="{{ url_for('profile') }}" method="POST" class="space-y-6">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">E-mail (não pode ser alterado)</label>
+            <input type="email" value="{{ user_info.email }}" readonly class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 rounded-md shadow-sm cursor-not-allowed">
+        </div>
+        <div>
+            <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Nome Completo</label>
+            <input id="name" name="name" type="text" value="{{ user_info.name or '' }}" required class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+        </div>
+        <div>
+            <label for="crm" class="block text-sm font-medium text-slate-700 dark:text-slate-300">CRM</label>
+            <input id="crm" name="crm" type="text" value="{{ user_info.crm or '' }}" required class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+        </div>
+        
+        <h3 class="font-semibold text-lg text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-600 pb-2">Dados da Clínica (Opcional)</h3>
+        <div>
+            <label for="clinicName" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Nome da Clínica/Unidade</label>
+            <input id="clinicName" name="clinicName" type="text" value="{{ user_info.clinicName or '' }}" class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-md shadow-sm">
+        </div>
+        <div>
+            <label for="clinicAddress" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Endereço da Clínica</label>
+            <input id="clinicAddress" name="clinicAddress" type="text" value="{{ user_info.clinicAddress or '' }}" class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-md shadow-sm">
+        </div>
+        <div>
+            <label for="clinicPhone" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Telefone da Clínica</label>
+            <input id="clinicPhone" name="clinicPhone" type="text" value="{{ user_info.clinicPhone or '' }}" class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-md shadow-sm">
+        </div>
+         <div>
+            <label for="clinicCityStateZip" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Cidade/Estado/CEP da Clínica</label>
+            <input id="clinicCityStateZip" name="clinicCityStateZip" type="text" value="{{ user_info.clinicCityStateZip or '' }}" class="mt-1 w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-md shadow-sm">
+        </div>
+
+        <div>
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
+                Salvar Alterações
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

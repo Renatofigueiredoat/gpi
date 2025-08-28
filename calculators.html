@@ -1,0 +1,133 @@
+
+{% extends "layout.html" %}
+
+{% block title %}Calculadoras Clínicas{% endblock %}
+
+{% set calculators = {
+    'Cardiologia': {
+        'chads-vasc': {'name': 'Escore CHA₂DS₂-VASc', 'fields': [
+            {'id': 'Insuficiência Cardíaca Congestiva', 'type': 'checkbox'}, {'id': 'Hipertensão', 'type': 'checkbox'},
+            {'id': 'Idade ≥ 75 anos', 'type': 'checkbox'}, {'id': 'Diabetes Mellitus', 'type': 'checkbox'},
+            {'id': 'AVC/AIT/TE prévio', 'type': 'checkbox'}, {'id': 'Doença Vascular (IAM prévio, etc.)', 'type': 'checkbox'},
+            {'id': 'Idade 65-74 anos', 'type': 'checkbox'}, {'id': 'Sexo Feminino', 'type': 'checkbox'}
+        ]},
+        'heart-score': {'name': 'Escore HEART (Dor Torácica)', 'fields': [
+            {'id': 'História', 'type': 'select', 'options': ['Levemente suspeita (0)', 'Moderadamente suspeita (1)', 'Altamente suspeita (2)']},
+            {'id': 'ECG', 'type': 'select', 'options': ['Normal (0)', 'Alterações não específicas da repolarização (1)', 'Alteração significativa do segmento ST (2)']},
+            {'id': 'Idade', 'type': 'select', 'options': ['< 45 anos (0)', '45-64 anos (1)', '≥ 65 anos (2)']},
+            {'id': 'Fatores de Risco', 'type': 'select', 'options': ['Nenhum fator de risco (0)', '1-2 fatores de risco (1)', '≥ 3 fatores de risco (2)']},
+            {'id': 'Troponina inicial', 'type': 'select', 'options': ['≤ Limite normal (0)', '1-3x o limite normal (1)', '> 3x o limite normal (2)']}
+        ]}
+    },
+    'Pneumologia e Risco': {
+        'curb-65': {'name': 'Escore CURB-65 (Gravidade da Pneumonia)', 'fields': [
+            {'id': 'Confusão mental', 'type': 'checkbox'}, {'id': 'Ureia > 50 mg/dL (ou BUN > 19 mg/dL)', 'type': 'checkbox'},
+            {'id': 'Frequência respiratória ≥ 30/min', 'type': 'checkbox'}, {'id': 'Pressão arterial (PAS < 90 mmHg ou PAD ≤ 60 mmHg)', 'type': 'checkbox'},
+            {'id': 'Idade ≥ 65 anos', 'type': 'checkbox'}
+        ]}
+    },
+    'Neurologia': {
+        'gcs': {'name': 'Escala de Coma de Glasgow (GCS)', 'fields': [
+            {'id': 'Abertura Ocular', 'type': 'select', 'options': ['Espontânea (4)', 'Ao som (3)', 'À pressão (2)', 'Nenhuma (1)']},
+            {'id': 'Resposta Verbal', 'type': 'select', 'options': ['Orientado (5)', 'Confuso (4)', 'Palavras (3)', 'Sons (2)', 'Nenhuma (1)']},
+            {'id': 'Resposta Motora', 'type': 'select', 'options': ['Obedece a comandos (6)', 'Localiza dor (5)', 'Retirada à dor (4)', 'Flexão anormal (3)', 'Extensão anormal (2)', 'Nenhuma (1)']}
+        ]}
+    }
+} %}
+
+{% set selected_calc_key = selected_calc or 'chads-vasc' %}
+
+{% block content %}
+<div class="text-center mb-12">
+    <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-white">Calculadoras Clínicas</h1>
+    <p class="mt-2 text-lg text-slate-600 dark:text-slate-400">Ferramentas de apoio à decisão para agilizar sua prática.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <aside class="md:col-span-1 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 h-fit">
+         <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-2 px-2">Categorias</h2>
+         <nav class="space-y-2">
+            {% for category, items in calculators.items() %}
+            <div>
+                <h3 class="font-bold text-md text-slate-700 dark:text-slate-200 p-2">{{ category }}</h3>
+                <ul class="space-y-1 mt-1 pl-4 border-l-2 border-slate-200 dark:border-slate-700 ml-4">
+                    {% for key, calc in items.items() %}
+                    <li>
+                        <a href="{{ url_for('calculators', calc=key) }}" class="w-full text-left p-2.5 block rounded-md text-sm font-medium
+                            {% if selected_calc_key == key %}
+                                bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300
+                            {% else %}
+                                text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700
+                            {% endif %}">
+                            {{ calc.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+         </nav>
+    </aside>
+
+    <div class="md:col-span-2">
+        {% set current_calculator = none %}
+        {% for category in calculators.values() %}
+            {% if selected_calc_key in category %}
+                {% set current_calculator = category[selected_calc_key] %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+            <form action="{{ url_for('calculators', calc=selected_calc_key) }}" method="POST" class="space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 dark:text-white">{{ current_calculator.name }}</h2>
+                <input type="hidden" name="calculator_name" value="{{ current_calculator.name }}">
+
+                <div class="space-y-4">
+                    {% for field in current_calculator.fields %}
+                    <div>
+                        {% if field.type == 'checkbox' %}
+                        <div class="flex items-center">
+                            <input id="{{ field.id }}" name="{{ field.id }}" type="checkbox" value="Sim" class="h-5 w-5 rounded border-gray-300 text-sky-600 focus:ring-sky-500" {% if inputs and inputs[field.id] %}checked{% endif %}>
+                            <label for="{{ field.id }}" class="ml-3 block text-sm text-slate-700 dark:text-slate-300">{{ field.id }}</label>
+                        </div>
+                        {% elif field.type == 'select' %}
+                        <label for="{{ field.id }}" class="block text-sm font-medium text-slate-700 dark:text-slate-300">{{ field.id }}</label>
+                        <select id="{{ field.id }}" name="{{ field.id }}" required class="mt-1 block w-full p-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md">
+                            <option value="" disabled {% if not inputs or not inputs[field.id] %}selected{% endif %}>Selecione...</option>
+                            {% for opt in field.options %}
+                            <option value="{{ opt }}" {% if inputs and inputs[field.id] == opt %}selected{% endif %}>{{ opt }}</option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 text-lg font-medium rounded-lg text-white bg-sky-600 hover:bg-sky-700">
+                        Calcular
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="mt-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 w-full animate-fadeIn space-y-4">
+            <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Resultado</h2>
+            <div class="text-center bg-sky-100 dark:bg-sky-900/50 p-4 rounded-lg">
+                <span class="block text-lg font-medium text-sky-800 dark:text-sky-300">Escore Calculado</span>
+                <span class="block text-4xl font-bold text-sky-600 dark:text-sky-400">{{ result.score }}</span>
+            </div>
+            <div>
+                <h3 class="font-semibold text-slate-700 dark:text-slate-200">Interpretação Clínica</h3>
+                <p class="mt-1 text-sm p-3 bg-slate-50 dark:bg-slate-700/50 rounded-md">{{ result.interpretation }}</p>
+            </div>
+             <div>
+                <h3 class="font-semibold text-slate-700 dark:text-slate-200">Fórmula/Critérios Utilizados</h3>
+                <p class="mt-1 text-sm p-3 bg-slate-50 dark:bg-slate-700/50 rounded-md font-mono">{{ result.formula }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

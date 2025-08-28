@@ -1,0 +1,41 @@
+
+{% extends "layout.html" %}
+
+{% block title %}Resultados para {{ query }}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('dashboard') }}" class="mb-6 text-sm text-sky-600 hover:underline dark:text-sky-400">&larr; Voltar para a busca</a>
+
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white">Pesquisa: {{ query }}</h1>
+</div>
+
+{% if summary %}
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Resumo Clínico</h2>
+    <p class="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">{{ summary }}</p>
+</div>
+{% endif %}
+
+{% if sources %}
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Fontes e Referências</h2>
+    <ul class="space-y-3">
+        {% for source in sources %}
+        <li>
+            <a href="{{ source.uri }}" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 text-sky-600 dark:text-sky-400 hover:underline">
+                <span>-</span>
+                <span class="truncate">{{ source.title or source.uri }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="mt-8 flex justify-center">
+    <a href="{{ url_for('prescription_builder', diagnosis=query) }}" class="w-full sm:w-auto flex justify-center items-center py-3 px-6 border border-transparent text-lg font-medium rounded-lg text-white bg-sky-600 hover:bg-sky-700 transition-transform transform hover:scale-105">
+        Continuar para Gerador de Prescrição
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="text-center my-8">
+    <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-white">Pesquisa Clínica e Modelos</h1>
+    <p class="mt-2 text-lg text-slate-600 dark:text-slate-400">Obtenha resumos e referências sobre condições clínicas.</p>
+</div>
+
+<div class="relative mb-12">
+    <form action="{{ url_for('search') }}" method="POST">
+        <input
+            type="text"
+            name="query"
+            placeholder="Pesquisar condição ou diagnóstico (ex: Sepse, IAM)..."
+            class="w-full p-4 pl-12 text-lg bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:border-sky-500 transition-shadow"
+            autocomplete="off"
+        />
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+        </div>
+    </form>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center border-t-4 border-sky-500">
+        <h2 class="text-2xl font-semibold text-slate-700 dark:text-slate-300 mt-4">Minhas Prescrições</h2>
+        <p class="mt-2 text-slate-500 dark:text-slate-400">Acesse seus modelos de prescrição salvos.</p>
+        <a href="{{ url_for('my_prescriptions') }}" class="mt-6 inline-block px-6 py-3 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-700 transition-all transform hover:scale-105">
+            Acessar meus modelos
+        </a>
+    </div>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center border-t-4 border-emerald-500">
+        <h2 class="text-2xl font-semibold text-slate-700 dark:text-slate-300 mt-4">Criar do Zero</h2>
+        <p class="mt-2 text-slate-500 dark:text-slate-400">Comece uma nova prescrição sem um modelo.</p>
+        <a href="{{ url_for('prescription_builder', diagnosis='new') }}" class="mt-6 inline-block px-6 py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-all transform hover:scale-105">
+            Criar Prescrição em Branco
+        </a>
+    </div>
+</div>
+
+<div class="border-t border-slate-200 dark:border-slate-700 pt-8">
+    <h2 class="text-2xl font-semibold text-slate-700 dark:text-slate-300 mb-6">Acesso Rápido</h2>
+    {% if recent_prescriptions %}
+        <div class="space-y-3">
+            {% for p in recent_prescriptions %}
+            <a href="{{ url_for('prescription_builder', diagnosis=p.diagnosis, load_id=p.id) }}" class="w-full text-left bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 hover:shadow-lg hover:ring-2 hover:ring-sky-500 transition-all flex justify-between items-center">
+                <div>
+                    <h3 class="font-semibold text-slate-800 dark:text-slate-200">{{ p.custom_name }}</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Diagnóstico: {{ p.diagnosis }}</p>
+                </div>
+                <span class="text-xs text-slate-400 dark:text-slate-500 flex-shrink-0 ml-4">
+                    Salvo em: {{ p.saved_at.strftime('%d/%m/%Y') }}
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-6 px-4 bg-slate-100 dark:bg-slate-800/50 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700">
+            <p class="text-slate-600 dark:text-slate-400">Nenhum modelo salvo recentemente.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
